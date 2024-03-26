@@ -14,7 +14,7 @@ import React, { useState } from "react";
 import bs58 from "bs58";
 import metadata from "../assets/metada.json";
 import { NFT_META_URI } from "../App.jsx";
-import {LoadingButton} from "../components/LoadingButton.jsx";
+import { LoadingButton } from "../components/LoadingButton.jsx";
 
 /**
  * MintPane コンポーネント
@@ -32,36 +32,14 @@ export const MintPane = () => {
 
   // NFTをミントするハンドラー関数
   const mintNft = async () => {
-         const builder = createNft(umi, {
-            generateSigner(umi),
-            name: metadata.name,
-            uri: NFT_META_URI,
-            sellerFeeBasisPoints: percentAmount(0),
-          });
-           const { signature } = await builder.sendAndConfirm(umi);
-            setSignature(signature);
-    {signature === null && (
-      <Button
-              variant="contained"
-              color="secondary"
-              size="small"
-              onClick={mintNft}
-              disabled={loading}
-      >
-        Mint
-      </Button>
-    )}
-    {/* 署名がある場合はトランザクションへのリンクを表示 */}
-    {signature !== null && (
-      <Button
-              size="small"
-              href={`https://explorer.solana.com/tx/${signature}`}
-              target="_blank"
-      >
-        View Transaction
-      </Button>
-    )}
-            
+    const builder = createNft(umi, {
+      generateSigner: (umi) => {},
+      name: metadata.name,
+      uri: NFT_META_URI,
+      sellerFeeBasisPoints: percentAmount(0),
+    });
+    const { signature } = await builder.sendAndConfirm(umi);
+    setSignature(signature);
   };
 
   return (
@@ -78,10 +56,7 @@ export const MintPane = () => {
     >
       {/* NFTの情報を表示するカードコンポーネント */}
       <Card sx={{ maxWidth: 345 }}>
-        {/*
-          NFTの画像を表示
-          CardMediaのaspectRationは設定した画像のアスペクト比を指定する（e.g. "16 / 9 auto", "1 / 1 auto", "4 / 3 auto"）
-        */}
+        {/* NFTの画像を表示 CardMediaのaspectRationは設定した画像のアスペクト比を指定する（e.g. "16 / 9 auto", "1 / 1 auto", "4 / 3 auto"） */}
         <CardMedia
           sx={{ aspectRatio: "1 / 1 auto", width: "345px" }}
           image={metadata.image}
