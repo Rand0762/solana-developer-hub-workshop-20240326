@@ -32,7 +32,36 @@ export const MintPane = () => {
 
   // NFTをミントするハンドラー関数
   const mintNft = async () => {
-
+         const builder = createNft(umi, {
+            generateSigner(umi),
+            name: metadata.name,
+            uri: NFT_META_URI,
+            sellerFeeBasisPoints: percentAmount(0),
+          });
+           const { signature } = await builder.sendAndConfirm(umi);
+            setSignature(signature);
+    {signature === null && (
+      <Button
+              variant="contained"
+              color="secondary"
+              size="small"
+              onClick={mintNft}
+              disabled={loading}
+      >
+        Mint
+      </Button>
+    )}
+    {/* 署名がある場合はトランザクションへのリンクを表示 */}
+    {signature !== null && (
+      <Button
+              size="small"
+              href={`https://explorer.solana.com/tx/${signature}`}
+              target="_blank"
+      >
+        View Transaction
+      </Button>
+    )}
+            
   };
 
   return (
